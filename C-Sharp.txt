@@ -1,0 +1,2069 @@
+C#
+
+    Удваивание всех чисел в списке
+
+        Print("Multiple each item in a list by 2", Enumerable.Range(1, 10).Select(i => i * 2));
+
+
+    Сумма списка чисел
+
+        Print("Sum a list of numbers", Enumerable.Range(1, 1000).Sum());
+
+
+    Проверка вхождения подстроки
+
+        var wordlist = new[] { "C#", "and stuff" };
+        var tweet = "This is an example tweet talking about C# and stuff";
+        Print("Verify if a word exists in string", wordlist.Any(word => tweet.IndexOf(word) > -1));
+        Print("Show matched words in string", wordlist.Where(word => tweet.IndexOf(word) > -1));
+
+
+    Чтение файла
+
+        Print("Read in a File", File.ReadAllBytes("oneliners.exe").Length);
+
+
+    С днём рожденья
+
+        Print("Happy Birthday", Enumerable.Range(1, 4).Select((i) => string.Format("Happy Birthday {0} ", i == 3 ? "dear NAME" : "to You")));
+
+
+    Фильтрация списка чисел
+
+        var passed = new List<int>();
+        var failed = new List<int>();
+
+        (from bucket in new[] { passed, failed } from i in new[] { 49, 58, 76, 82, 88, 90 } select new { bucket, i }).ToList().ForEach((tuple) => tuple.bucket.AddRange(Enumerable.Repeat(tuple, 1).Where((tup) => (tup.bucket == passed && tup.i > 60) || (tup.bucket == failed && tup.i <= 60)).Select((tup) => tup.i)));
+        Print("Filter list of numbers >60", (IEnumerable<int>)passed);
+        Print("Filter list of numbers <=60", (IEnumerable<int>)failed);
+
+
+    Получение и разбор XML от веб-сервиса
+
+        Print("Fetch and Parse an XML web service", XDocument.Load("http://search.twitter.com/search.atom?&q=scala"));
+
+
+    Поиск минимума и максимума в списке
+
+        Print("Find minimum in a list", Enumerable.Min(new[] { 14, 35, -7, 46, 98 }));
+        Print("Find maximum in a list", Enumerable.Max(new[] { 14, 35, -7, 46, 98 }));
+
+
+    Параллельная обработка
+
+        Print("Parallel Processing", Enumerable.Range(1, 10).AsParallel().Select((i)=>i*2).AsEnumerable());
+
+
+    FizzBuzz
+
+        Print("Fizzbuzz", Enumerable.Range(1, 15).Select((i)=>i + (i%3==0?"fizz":"") + (i%5==0?"buzz":"")));
+
+
+
+
+using System;
+
+namespace ConsoleApplication1
+{
+    class Program
+    {
+        int r;
+        
+        // находим наибольший общий делитель для двух целых чисел - НОД
+
+        public static int Gcd(int m, int n)
+        {
+            if (n == 0)                             // если одно из чисел равно 0, то первое число явл-ся НОД
+                return m;           
+            else
+            {
+                while (n != 0)                      
+                {
+                    int r = m % n;                  // остаток от деления по модулю
+                    m = n;                          // в этом месте, мы полагаем, что аргументы передаются так, что m > n
+                    n = r;                          // теперь по меньшему аргументу пойдет вычисление остатка от деления по модулю
+                }                                   // замечание - если мы ставим m < n правильный ответ все равно находится, только, наверное, итераций идет больше
+                return m;
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            int m = 60;
+            int n = 24;
+
+            int r = Gcd(m, n);
+
+            Console.WriteLine("Наибольший общий делитель для {0} и {1} равен {2}", m, n, r);
+           
+            Console.ReadKey();
+        } 
+      
+    }
+}
+
+
+Алгоритм – понятная и точная  последовательность действий, описывающая процесс преобразования объекта из начального состояния в конечное.
+
+Исполнителем алгоритма может быть как человек (кулинарные рецепты, различные инструкции, алгоритмы математических вычислений), так и техническое устройство. 
+Различные машины (компьютеры, промышленные роботы, современная бытовая техника) являются формальными исполнителями алгоритмов. 
+От формального исполнителя не требуется понимание сущности решаемой задачи, но требуется точное выполнение последовательности команд.
+
+
+Для создания алгоритма (программы) необходимо знать:
+
+- полный набор исходных данных задачи (начальное состояние объекта);
+
+- цель создания алгоритма (конечное состояние объекта);
+
+- систему команд исполнителя (то есть набор команд, которые исполнитель понимает и может выполнить).
+
+
+Любой сколь угодно сложный алгоритм может быть разработан на основе трёх типовых структур: следования, ветвления и повторения. 
+При этом структуры могут располагаться последовательно друг за другом или вкладываться друг в друга.
+
+
+Наиболее простой алгоритмической структурой является  - линейная. В ней все операции выполняются один раз в том порядке, в котором они записаны.
+
+
+В полном ветвлении предусмотрено два варианта действий исполнителя в зависимости от значения логического выражения (условия). 
+Если условие истинно, то выполняться будет только первая ветвь, иначе только вторая ветвь.
+
+Одна из ветвей может быть пустой. Такая структура называется неполным ветвлением или обходом.
+
+Из нескольких ветвлений можно сконструировать  структуру «выбор» (множественное ветвление), которая будет выбирать не из двух, 
+а из большего количества вариантов действий исполнителя, зависящих от нескольких условий. 
+Существенно, что выполняется только одна ветвь - в такой структуре важное значение приобретает порядок следования условий: 
+если выполняются несколько условий, то сработает только одно из них - первое сверху.
+
+
+Цикл позволяет организовать многократное повторение одной и той же последовательности команд - она называется телом цикла. 
+В различных видах циклических алгоритмов количество повторений может зависеть от значения логического выражения (условия) 
+или может быть жестко задано в самой структуре. Различают циклы : «до» (do while), «пока» (while), циклы со счётчиком (for). 
+В циклах «до» и «пока» логическое выражение (условие) может предшествовать телу цикла (цикл с предусловием) или завершать цикл (цикл с послеусловием). 
+
+
+ Существует два метода разработки сложных алгоритмов:
+
+Метод последовательной детализации задачи («сверху-вниз») - состоит в том, что исходная сложная задача разбивается на подзадачи. 
+Каждая из подзадач рассматривается и решается отдельно. Если какие-либо из подзадач сложны, они также разбиваются на подзадачи. 
+Процесс продолжается до тех пор, пока подзадачи не сведутся  к элементарным. Решения отдельных подзадач затем собираются в единый алгоритм решения исходной задачи. 
+Метод широко используется, так как позволяет вести разработку общего алгоритма одновременно нескольким  программистам, решающим локальные подзадачи. 
+Это необходимое условие быстрой разработки программных продуктов.
+
+Сборочный метод («снизу-вверх») - заключается в создании множества программных модулей, реализующих решение типичных задач. 
+При решении сложной задачи программист может использовать разработанные модули в качестве вспомогательных алгоритмов (процедур). 
+Во многих системах программирования уже существуют подобные наборы модулей, что существенно упрощает и ускоряет создание сложного алгоритма. 
+
+
+
+На мой взгляд хорошая алгоритмическая подготовка должна стремиться дать программисту следующие три умения.
+
+Во-первых, это умение решать непонятные задачи. В нечетких формулировках жизненных задач видеть возможные строгие трактовки. 
+По строгим трактовкам накидывать варианты решения. Всесторонне анализировать разные варианты и выбирать самый подходящий.
+Очевидно, для этого недостаточно просто знать алгоритмы. Нужно уметь “видеть их”, распознавать возможности их применения.
+
+Во-вторых, алгоритмическая подготовка должна прививать привычку анализировать эффективность каждого вашего решения. 
+Не пропускать в критических местах квадратичные или экспоненциальные алгоритмы, и не закладывать в архитектуру программы идеи, 
+которые потом невозможно будет реализовать достаточно эффективно.
+
+В-третьих, алгоритмическая подготовка должна помогать умело пользоваться готовыми инструментами. 
+Базы данных — это сплошные структуры данных и алгоритмы. Причем на концептуальном уровне довольно простые и понятные — деревья поиска, хэштаблицы, SS-Table и т.д.
+
+Например, зная, что индекс в БД — это просто дерево поиска, несложно понять, какие запросы могут быть выполнены быстро, а какие обречены на full-scan.
+Зная, как на каких алгоритмах работает полнотекстовый поиск в Lucene, можно предсказать, какие запросы к Elastic будут давать релевантные ответы, а какие — нет, и даже как это можно доработать.
+
+Если подводить итог:
+
+Кроме самих алгоритмов — учитесь их распознавать в задачах реального мира.
+Прививайте себе привычку анализировать эффективность кода, который вы пишите.
+Изучайте алгоритмы под капотом у инструментов, которыми вы пользуетесь — это пригодится при их эксплуатации.
+
+
+
+Он должен уметь выводить алгоритмы, а не знать их. Ровно как и математик должен уметь выводить доказательства.
+
+На каких алгоритмах стоит потренироваться в выводе:
+
+    - сортировки — от пузырька, до параллельной кеш-независимой сортировки;
+    - динамическое программирование;
+    - алгоритмы сжатия данных — кодирование Хаффмана, арифметическое кодирование, сжатие подпоследовательностей;
+    - символические вычисления — как организовать;
+    - как сделать статическую структуру динамической — как сделать быструю (O(logN)) вставку в упорядоченный массив.
+
+
+
+ArrayList — это коллекция, которая реализует интерфейс IList<T> и использует массив для хранения элементов. 
+Как и связный список, ArrayList может хранить произвольное число элементов (ограниченное только объемом доступной памяти), но в остальном ведет себя как массив.  
+
+
+Сортировка пузырьком из Java:
+
+public static void sort(String[] array)
+    {
+        //напишите тут ваш код
+        //сортируем методом пузырька, используя метод сверки
+        //между собой для каждых 2 строк
+        for (int i=0; i<array.length-1;){
+            int s = i+1;
+            String temp = null;
+            //сначала отправляем первое и второе значение на сверку
+            if(isGreaterThan(array[i], array[s])){
+                temp = array[s];
+                array[s]=array[i];
+                array[i]=temp;
+                if (i>0) i--;
+            }
+            else i++;
+
+        }
+
+    }
+
+    //Метод для сравнения строк: 'а' больше чем 'b'
+    public static boolean isGreaterThan(String a, String b)
+    {
+
+        //вернёт true если а больше б
+        //вернёт false если а меньше б
+        return a.compareTo(b) > 0;
+    }
+
+
+
+Пузырьковая сортировка в С# (скопировал пример с интернета)
+
+using System;
+
+namespace ConsoleApplication2
+{
+    class MyClass
+    {
+        public static void SortSpisok(int[] st)
+        {
+            bool swapped;
+
+            do
+            {
+                swapped = false;
+                for (int i = 1; i < st.Length; i++)
+                {
+                    if (st[i - 1].CompareTo(st[i]) > 0)
+                    {
+                        Swap(st, i - 1, i);
+                        swapped = true;
+                    }
+                }
+            } while (swapped != false);
+          
+        }
+
+        public static void Swap(int[] test, int a, int b)
+        {            
+            if (a != b)
+            {
+                int temp = test[a];
+                test[a] = test[b];
+                test[b] = temp;
+
+            }
+                     
+        }
+    }
+
+    class Program
+    {  
+        static void Main(string[] args)
+        {
+            int[] numbers = {12, 16, 3, 5, 17, 6, 5, 8, 9, 1};
+
+            Console.WriteLine("Hello! Start... ");
+            Console.WriteLine("Beginner massive is:\n");
+
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                Console.WriteLine(numbers[i]);
+            }
+
+            Console.WriteLine();
+
+            MyClass.SortSpisok(numbers);
+
+            Console.WriteLine("Second massive is:\n");
+
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                Console.WriteLine(numbers[i]);
+            }
+
+            Console.ReadKey();
+        }
+    }
+}
+
+Hello! Start...
+Beginner massive is:
+
+12
+16
+3
+5
+17
+6
+5
+8
+9
+1
+
+Second massive is:
+
+1
+3
+5
+5
+6
+8
+9
+12
+16
+17
+
+
+А вот так элегантно это решается с применением списка List<> 
+
+{
+    List<int> numbers = new List<int>{12, 16, 3, 5, 17, 6, 5, 8, 9, 1};
+
+    numbers.Sort();
+
+    Console.WriteLine("Hello! Start... ");
+    Console.WriteLine("Beginner massive is:\n");
+
+    for (int i = 0; i < numbers.Count; i++)
+    {
+        Console.WriteLine(numbers[i]);
+    }
+}
+
+
+
+
+
+
+
+using System;
+
+namespace ConsoleApplication1
+{
+    class Program 
+    {
+        static void SortInt(int[] st)
+        {
+            bool swapped;
+
+            do
+            {
+                swapped = false;
+
+                Console.WriteLine();
+
+                for (int i = 1; i < st.Length; i++)
+                {
+                    if (st[i-1].CompareTo(st[i]) > 0)
+                    {
+                        Swap(st, i - 1, i);
+                        swapped = true;
+                    }
+                }
+
+                for (int i = 0; i < st.Length; i++)
+                {
+                    Console.Write("{0} ", st[i]);
+                }
+
+            } while (swapped);
+        }
+
+        static void Swap(int[] test, int a, int b)
+        {
+            if (test[a] != test[b])
+            {
+                int temp = test[b];
+                test[b] = test[a];
+                test[a] = temp;
+
+            }
+        }
+
+
+        static void Main(string[] args)
+        {
+            int[] list1 = {12, 13, 16, 7, 8, 9, 11, 23, 3, 4};
+
+            for (int i = 0; i < list1.Length; i++)
+            {
+                Console.WriteLine("{0} ", list1[i]);
+            }
+
+            SortInt(list1);
+
+            Console.WriteLine();
+            Console.WriteLine();   
+
+            for (int i = 0; i < list1.Length; i++)
+            {
+                Console.WriteLine("{0} ", list1[i]);
+            }
+
+            Console.ReadKey();
+        }      
+      
+    }
+}
+
+
+12
+13
+16
+7
+8
+9
+11
+23
+3
+4
+
+12 13 7 8 9 11 16 3 4 23
+12 7 8 9 11 13 3 4 16 23
+7 8 9 11 12 3 4 13 16 23
+7 8 9 11 3 4 12 13 16 23
+7 8 9 3 4 11 12 13 16 23
+7 8 3 4 9 11 12 13 16 23
+7 3 4 8 9 11 12 13 16 23
+3 4 7 8 9 11 12 13 16 23
+3 4 7 8 9 11 12 13 16 23
+
+3
+4
+7
+8
+9
+11
+12
+13
+16
+23
+
+
+
+
+
+
+Работа с коллекциями
+
+static void Main(string[] args)
+{
+    Hashtable tab = new Hashtable();
+
+    tab["USD"] = 340;
+    tab["RUR"] = 5;
+    tab["EUR"] = 350;
+    tab["FNT"] = 450;
+
+    Console.WriteLine('\n');                
+
+    ICollection c = tab.Keys;
+
+    foreach (object str in c)
+        Console.WriteLine(str + " : " + tab[str]);
+
+    Console.WriteLine('\n');
+}
+
+EUR : 350
+FNT : 450
+RUR : 5
+USD : 340
+
+
+
+
+
+SortedList tab = new SortedList();
+
+tab["USD"] = 340;
+tab["RUR"] = 5;
+tab["EUR"] = 350;
+tab["FNT"] = 450;
+
+Console.WriteLine('\n');                
+
+ICollection c = tab.Keys;
+
+foreach (object str in c)
+    Console.WriteLine(str + " : " + tab[str]);
+
+Console.WriteLine('\n');
+Console.WriteLine(tab.GetByIndex(1));
+
+
+- Коллекция SortedList позволяет находить по индексам значения, и индексы значений.
+
+
+
+
+Работа с нумератором IDictionaryEnumerator
+
+Hashtable tab = new Hashtable();
+
+tab["USD"] = 340;
+tab["RUR"] = 5;
+tab["EUR"] = 350;
+tab["FNT"] = 450;
+
+Console.WriteLine('\n');
+
+IDictionaryEnumerator etr = tab.GetEnumerator();
+
+// использование свойства Entry
+while (etr.MoveNext())
+{
+    Console.WriteLine(etr.Entry.Key + " : " + etr.Entry.Value);
+}
+
+Console.WriteLine('\n');
+
+etr.Reset();                // возвращает нумератор в начало коллекции
+
+// использование свойств Key и Value
+while (etr.MoveNext())
+{
+    Console.WriteLine(etr.Key + " : " + etr.Value);
+}
+
+Console.WriteLine('\n');
+
+
+EUR : 350
+FNT : 450
+RUR : 5
+USD : 340
+
+
+EUR : 350
+FNT : 450
+RUR : 5
+USD : 340
+
+
+
+
+
+Хранение в коллекциях классов, определенных пользователем.
+
+class Sclad
+{
+    string name;
+    double cost;
+    int owen;
+
+    public Sclad(string n, double c, int o)
+    {
+        name = n;
+        cost = c;
+        owen = o;
+    }
+
+    public override string ToString()
+    {
+        return String.Format("{0, -16} Цена: {1,8:C} В налиции: {2}", name, cost, owen);
+    }
+
+}
+
+static void Main(string[] args)
+{
+    ArrayList inv = new ArrayList();
+
+    inv.Add(new Sclad("Плоскогубцы", 5.95, 3));
+    inv.Add(new Sclad("Ножовка", 6.99, 6));
+    inv.Add(new Sclad("Молоток", 7.55, 5));
+    inv.Add(new Sclad("Перфоратор", 15.95, 4));
+    
+    Console.WriteLine('\n');
+
+    foreach (Sclad i in inv)
+        Console.WriteLine(" " + i);
+}
+
+
+ Плоскогубцы      Цена:   5,95р. В налиции: 3
+ Ножовка          Цена:   6,99р. В налиции: 6
+ Молоток          Цена:   7,55р. В налиции: 5
+ Перфоратор       Цена:  15,95р. В налиции: 4
+
+
+
+
+Реализуем интерфейс IComparable
+
+class Sclad : IComparable
+{
+    string name;
+    double cost;
+    int owen;
+
+    public Sclad(string n, double c, int o)
+    {
+        name = n;
+        cost = c;
+        owen = o;
+    }
+
+    public override string ToString()
+    {
+        return String.Format("{0, -16} Цена: {1,8:C} В налиции: {2}", name, cost, owen);
+    }
+
+    // реализуем сортировку    
+    public int CompareTo(object obj)
+    {
+        Sclad b;
+        b = (Sclad) obj;
+        return name.CompareTo(b.name);
+    }
+
+}
+
+static void Main(string[] args)
+{
+    ArrayList inv = new ArrayList();
+
+    inv.Add(new Sclad("Плоскогубцы", 5.95, 3));
+    inv.Add(new Sclad("Ножовка", 6.99, 6));
+    inv.Add(new Sclad("Молоток", 7.55, 5));
+    inv.Add(new Sclad("Перфоратор", 15.95, 4));
+    
+    Console.WriteLine('\n');
+
+    foreach (Sclad i in inv)
+        Console.WriteLine(" " + i);
+
+    inv.Sort();
+
+    Console.WriteLine('\n');
+
+    foreach (Sclad i in inv)
+        Console.WriteLine(" " + i);
+}
+
+ Плоскогубцы      Цена:   5,95р. В налиции: 3
+ Ножовка          Цена:   6,99р. В налиции: 6
+ Молоток          Цена:   7,55р. В налиции: 5
+ Перфоратор       Цена:  15,95р. В налиции: 4
+
+
+ Молоток          Цена:   7,55р. В налиции: 5
+ Ножовка          Цена:   6,99р. В налиции: 6
+ Перфоратор       Цена:  15,95р. В налиции: 4
+ Плоскогубцы      Цена:   5,95р. В налиции: 3
+
+
+
+
+
+Ключевые слова C#
+
+abstract event new struct
+as explicit null switch
+base extern object this
+bool false operator throw
+break finally out true
+byte fixed override try
+case float params typeof
+catch for private uint
+char foreach protected ulong
+checked goto public unchecked
+class if readonly unsafe
+const implicit ref ushort
+continue in return using
+decimal int sbyte virtual
+default interface sealed volatile
+delegate internal short void
+do is sizeof while
+double lock stackalloc
+else long static
+enum namespace string
+
+
+
+
+
+
+\а Звуковой сигнал (звонок)
+\b Возврат на одну позицию
+\f Подача страницы (для перехода к началу следующей страницы)
+\n Новая строка
+\r Возврат каретки
+\t Горизонтальная табуляция
+\v Вертикальная табуляция
+\0 Нуль-символ
+\’ Одинарная кавычка (апостроф)
+\" Двойная кавычка
+\\ Обратная косая черта
+
+
+
+
+
+Если спецификатор доступа для члена класса не указан, то подразумевается - private
+
+private - к этому члену имеют доступ только члены класса.
+
+
+
+Console.Read()  -  считывает посимвольно введенные символы. Но при этом оставляет во входном потоке и символы перевода строки 
+(нажатие Enter, например) и возврат картеки и т.д.
+
+Console.ReadLine()  -  читает всю строку до символа перевода строки.
+
+
+string str;
+                                   
+Console.WriteLine();
+
+Console.WriteLine("Введите любую строку, а затем - Enter: ");
+
+str = Console.In.ReadLine();
+
+Console.WriteLine("Вы ввели строку: " + str);
+
+
+
+
+
+
+
+
+Записал в файл алфавит, файл находится в папке:
+
+C:\Users\afisenko\Documents\Visual Studio 2012\Projects\ConsoleApplication1\ConsoleApplication1\bin\Debug
+
+public static void Main(string[] args) 
+{
+    // int i;
+    FileStream outFile;
+
+    outFile = new FileStream("testFile.txt", FileMode.Create);
+
+    for (char c = 'A'; c <= 'Z'; c++)
+        outFile.WriteByte((byte) c);
+
+    outFile.Close();
+
+    Console.ReadKey();
+
+}
+
+
+А я создавал прям в визуал студио файл, он оказался в папке 
+C:\Users\afisenko\Documents\Visual Studio 2012\Projects\ConsoleApplication1\ConsoleApplication1\testFile.txt 
+
+
+
+А вот я все-таки прочитал данные из файла, который создал в визуал студио:
+
+public static void Main(string[] args)
+{
+    int i;
+    FileStream inFile;
+
+    inFile = new FileStream("testFile.txt", FileMode.Open);
+
+    do
+    {
+        try
+        {
+            i = inFile.ReadByte();
+        }
+        catch (Exception exc) { Console.Write("Error!!!" + exc.Message); return; }
+
+        if (i != -1) Console.Write((char) i);
+        
+
+    } while (i != -1);                    
+
+    inFile.Close();
+
+    Console.ReadKey();
+
+}
+
+
+Нашла более изящное и короткое решение данной задачи нежели простой перебор.
+
+string[] StringsArray = StartString.Split(',');
+int[] IntArray = StringsArray.Select(x => int.Parse(x)).ToArray();
+
+Обычный метод перебора массива и преобразования.
+
+int[] SelAuds = new int[] { };
+if (SelAudsString != String.Empty)
+{
+    string[] auditors = SelAudsString.Split(',');
+    SelAuds = new int[auditors.Count()];
+    int index = 0;
+    foreach (var item in auditors)
+    {
+        SelAuds[index] = Convert.ToInt32(item);
+        index++;
+    }
+}
+
+
+Как я читал данные из файла и переводил в массив значений int:
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string fileName = "dataFile.txt";
+
+        string line = File.ReadAllText(fileName);
+
+        Console.WriteLine("Это строка из файла dataFile.txt \n");
+
+        Console.WriteLine(line);
+
+        Console.WriteLine();
+
+        List<int> list = line.Split(new[] { " ", ".", ",", "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+
+        list.Sort();
+
+        Console.WriteLine("Это отсортированный список значений int из файла dataFile.txt \n");
+
+        foreach (int num in list)
+            Console.Write(num + " ");
+
+        Console.ReadKey();
+
+    }
+}
+    
+// Обратите внимание, у меня в текстовом файле две строки
+
+Это строка из файла dataFile.txt
+
+12 13 7 6 4 3 8 -5 -1 7 9 11 25 17 18 22
+5 19 98 8 9 10 13 54
+
+Это отсортированный список значений int из файла dataFile.txt
+
+-5 -1 3 4 5 6 7 7 8 8 9 9 10 11 12 13 13 17 18 19 22 25 54 98
+
+
+
+
+
+
+
+Создаешь структуру "Вершина дерева", которая имеет две ссылки на структуры "Вершина дерева" (то есть на себя же), а так же можешь вписывать значения, которые должна хранить вершина.
+Потом создаешь класс "Дерево", в котором хранишь ссылку на элемент типа "Вершина дерева". Это будет корнем. А от корня уже можно плясать как хочешь.
+Код специально не пишу, потому что вроде как тут все понятно, если тебе знакомы понятия "класс" и "ссылка".
+
+Собственно, так создается бинарное дерево на многих (всех?) ООП-языках.
+
+
+
+class Node
+{
+    public Node Left {get; set; }
+    public Node Right {get; set; }
+    public int Value {get; set; }
+}
+
+
+class Tree
+{
+    private Node _root;
+   
+    Tree()
+    {
+        _root = new Node();
+    }
+}
+
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TreeBinary
+{
+
+class Node<T> where T : IComparable
+{
+    public Node<T> Left { get; set; }
+    public Node<T> Right { get; set; }
+    public T Element { get; set; }
+
+    public Node(T element)
+    {
+        Element = element;
+    }
+}
+
+class Tree<T> where T : IComparable
+{
+    protected Node<T> _root;
+
+    public void AddElement(T newElement)
+    {
+        if (_root == null)
+        {
+            _root = new Node<T>(newElement);
+        }
+        else 
+            AddElementRecursion(_root, newElement);
+    }
+
+    private static void AddElementRecursion(Node<T> currentNode, T newElement)
+    {
+        if (currentNode.Element.CompareTo(newElement) < 0)
+        {
+            if (currentNode.Right == null)
+                currentNode.Right = new Node<T>(newElement);
+            else
+                AddElementRecursion(currentNode.Right, newElement);
+        }
+        else
+        {
+            if (currentNode.Left == null)
+                currentNode.Left = new Node<T>(newElement);
+            else
+                AddElementRecursion(currentNode.Left, newElement);
+        }
+    }
+
+    public T GetMinElement()
+    {
+        return GetMinElementRecursion(_root);
+    }
+
+    public static T GetMinElementRecursion(Node<T> currentNode)
+    {
+        if (currentNode.Left == null)
+            return currentNode.Element;
+        else
+            return GetMinElementRecursion(currentNode.Left);
+    }
+
+}
+
+class TreeDoubleType : Tree<double>
+{
+    public double GetSum()
+    {
+        double sum = 0;
+        GetSumRecursion(_root, ref sum);
+        return sum;
+    }
+
+    private static void GetSumRecursion(Node<double> currentNode, ref double sum)
+    {
+        sum += currentNode.Element;
+
+        if (currentNode.Left != null)
+            GetSumRecursion(currentNode.Left, ref sum);
+
+        if (currentNode.Right != null)
+            GetSumRecursion(currentNode.Right, ref sum);
+    }
+
+    public new double GetMinElement()
+    {
+        return GetMinElementRecursion(_root);
+    }
+
+    public static new double GetMinElementRecursion(Node<double> currentNode)
+    {
+        if (currentNode.Left == null)
+            return currentNode.Element;
+        else
+            return GetMinElementRecursion(currentNode.Left);
+    }
+
+    public bool SearchElement(double value)
+    {
+        if (_root.Element == value)
+            return true;
+        if (_root.Element < value)
+        {
+            Console.Write(_root.Element + " ");
+            return SearchElementRecursion(_root.Right, value);
+        }
+        else
+        {
+            Console.Write(_root.Element + " ");
+            return SearchElementRecursion(_root.Left, value);
+        }
+    }
+
+    public static bool SearchElementRecursion(Node<double> currentNode, double value)
+    {
+        if (currentNode == null) return false;
+
+        if (currentNode.Element == value)
+            return true;
+        if (currentNode.Element < value)
+        {
+            Console.Write(currentNode.Element + " ");
+            return SearchElementRecursion(currentNode.Right, value);
+        }
+        else
+        {
+            Console.Write(currentNode.Element + " ");
+            return SearchElementRecursion(currentNode.Left, value);
+        }
+    }
+
+    public long CountElements()
+    {
+        return CountElementsRes(_root); 
+    }
+
+    private long CountElementsRes(Node<double> currentNode)
+    {
+        long count = 1;
+
+        if (currentNode.Right != null)
+        {
+            count += CountElementsRes(currentNode.Right);
+        }
+        if (currentNode.Left != null)
+        {
+            count += CountElementsRes(currentNode.Left);                
+        }
+        return count;
+    }
+
+}
+
+class Program
+{    
+
+static void Main(string[] args)
+{
+    string fileName = "dataFile.txt";
+
+    string line = File.ReadAllText(fileName);
+
+    Console.WriteLine("Это данные из файла dataFile.txt \n");
+
+    Console.WriteLine(line);
+
+    Console.WriteLine();
+
+    List<double> list = line.Split(new[] {" ", "\n"}, StringSplitOptions.RemoveEmptyEntries).Select(double.Parse).ToList();
+
+    Console.WriteLine("Это список значений double из файла dataFile.txt \n");
+
+    foreach (double d in list)
+        Console.Write(d + " ");
+
+    Console.WriteLine();
+
+    TreeDoubleType tree = new TreeDoubleType();
+
+    foreach (double d in list)
+        tree.AddElement(d);
+
+    double min = tree.GetMinElement();
+    double sum = tree.GetSum();            
+
+    Console.WriteLine("\nМинимальный элемент дерева: {0:F}", min);
+    Console.WriteLine("\nСумма элементов дерева: {0:F}\n", sum);
+   
+    double findElement = -1.2; 
+    bool elem = tree.SearchElement(findElement);
+   
+    Console.WriteLine("\n\nИмеется ли элемент {0} в дереве: {1}", findElement, elem);
+
+    long countTree = tree.CountElements();
+
+    Console.WriteLine("\nКоличество узлов в дереве: {0}\n", countTree);
+
+    Console.ReadKey();
+
+}
+}
+}
+
+
+
+
+
+
+
+Моя быстрая сортировка (QuickSort)
+
+
+static void qsort(double[] t, int a, int b)
+{
+    if (a >= b) return;
+
+    int res = partition(t, a, b);
+    qsort(t, a, res-1);
+    qsort(t, res+1, b);
+}
+
+
+static int partition(double[] array, int start, int end)
+{
+    int marker = start;
+
+    for (int i = start; i <= end; i++)
+    {
+        if (array[i] <= array[end])
+        {
+            double temp = array[marker];
+            array[marker] = array[i];
+            array[i] = temp;
+            marker++;
+        }
+    }
+    return marker-1;
+}
+
+static void Main(string[] args)
+{
+    ...
+
+    double[] dbList = new double[list.Count];
+
+    for (int i = 0; i < dbList.Length; i++)
+        dbList[i] = list[i];
+
+    Console.WriteLine("Отсортированные данные из файла dataFile.txt \n");
+
+    qsort(dbList, 0, dbList.Length - 1);
+
+    foreach (double d in dbList)
+        Console.Write(d + " ");
+
+    Console.ReadKey();
+    
+}
+
+
+
+
+
+static void qsort(double[] t, int a, int b)
+{
+    count++;
+
+    Console.WriteLine("\nЗапуск qsort()  {0}, start = {1} end = {2}", count, a, b);
+
+    if (a >= b) return;
+
+    int res = partition(t, a, b);
+
+    Console.WriteLine("\n После вычисления partition(): res = {0}", res); ;            
+
+    qsort(t, a, res-1);
+    qsort(t, res+1, b);
+}
+
+
+static int partition(double[] array, int start, int end)
+{
+    int res = start;
+
+    Console.WriteLine("\n partition(): res = {0}, a = {1} b = {2}", res, start, end);
+
+    Console.WriteLine("\n Начинаем цикл for");
+
+    for (int i = start; i <= end; i++)
+    {
+        if (array[i] <= array[end])
+        {
+            double temp = array[res];
+            array[res] = array[i];
+            array[i] = temp;
+            res++;
+        }
+    }
+
+    Console.WriteLine();
+
+    foreach (double d in array)
+        Console.Write(d + " ");
+
+     Console.WriteLine();
+
+    return res-1;
+}
+
+static void Main(string[] args)
+{
+    double[] dbList = new double[]{2,4,3,5,9,7,8,1,6};
+
+    qsort(dbList, 0, dbList.Length - 1);
+
+    Console.WriteLine();
+
+    foreach (double d in dbList)
+        Console.Write(d + " ");
+
+    Console.ReadKey();
+    
+}
+
+
+
+Запуск qsort()  1, start = 0 end = 8
+
+ partition(): res = 0, a = 0 b = 8
+
+ Начинаем цикл for
+
+2 4 3 5 1 6 8 9 7
+
+ После вычисления partition(): res = 5
+
+Запуск qsort()  2, start = 0 end = 4
+
+ partition(): res = 0, a = 0 b = 4
+
+ Начинаем цикл for
+
+1 4 3 5 2 6 8 9 7
+
+ После вычисления partition(): res = 0
+
+Запуск qsort()  3, start = 0 end = -1
+
+Запуск qsort()  4, start = 1 end = 4
+
+ partition(): res = 1, a = 1 b = 4
+
+ Начинаем цикл for
+
+1 2 3 5 4 6 8 9 7
+
+ После вычисления partition(): res = 1
+
+Запуск qsort()  5, start = 1 end = 0
+
+Запуск qsort()  6, start = 2 end = 4
+
+ partition(): res = 2, a = 2 b = 4
+
+ Начинаем цикл for
+
+1 2 3 4 5 6 8 9 7
+
+ После вычисления partition(): res = 3
+
+Запуск qsort()  7, start = 2 end = 2
+
+Запуск qsort()  8, start = 4 end = 4
+
+Запуск qsort()  9, start = 6 end = 8
+
+ partition(): res = 6, a = 6 b = 8
+
+ Начинаем цикл for
+
+1 2 3 4 5 6 7 9 8
+
+ После вычисления partition(): res = 6
+
+Запуск qsort()  10, start = 6 end = 5
+
+Запуск qsort()  11, start = 7 end = 8
+
+ partition(): res = 7, a = 7 b = 8
+
+ Начинаем цикл for
+
+1 2 3 4 5 6 7 8 9
+
+ После вычисления partition(): res = 7
+
+Запуск qsort()  12, start = 7 end = 6
+
+Запуск qsort()  13, start = 8 end = 8
+
+1 2 3 4 5 6 7 8 9
+
+
+
+
+
+
+Примеры с бинарным поиском
+
+
+
+Если вам интересно, как это обычно делают на олимпиадах про программированию.
+1. Никому не надо искать первый элемент из одинаковых. Это упрощает алгоритм.
+2. Направление убывания/возрастания известно в 90% случаев. А если не известно, то обычно все и еще хуже.
+3. Рассматриваются 2 а не 3 случая.
+Получается следующее:
+
+int[] data;
+int getIndex(int left, int right, int x) {
+  while (right-left>1) {
+    int middle=(left+right)/2; // обычно не нужно больше 10^9 элементов.
+    if (data[middle]>=x) {
+      left=middle;
+    } else {
+      right=middle;
+    }
+  }
+  return left;
+}
+
+
+Дальше тот, кто использует эту функцию может проверить найден x или отрезок [data[result], data[result+1]) 
+которому он принадлежит сравнив data[result] и x. 
+Ну и на него же ложатся обязанности проверить data[left]<=x, x<data[right]. 
+Обычно используется left=0, right = data.length, а data[0]<=x следует из условия задачи. 
+А если не следует, часто имеет смысл добавить фиктивный элемент.
+
+Достоинства такого подхода — короче уже некуда и очень трудно в нем ошибиться. 
+Достаточно понимать, что инвариант алгоритма это data[left]<=x<data[right]. 
+Плюс можно использовать right=data.length, хотя такого элемента в массиве нет. 
+Он предполагается равным +бесконечности. 
+
+
+
+class Program
+{
+    static void SortedList(int[] tab)
+    {
+        bool swapped;
+
+        do
+        {
+            swapped = false;
+                            
+            for (int i = 1; i < tab.Length; i++)
+            {
+                if (tab[i-1].CompareTo(tab[i]) > 0)
+                {
+                    Swap(tab, i-1, i);
+                    swapped = true;
+                }
+            }
+
+        } while (swapped != false);
+
+    }
+
+    static void Swap(int[] tet, int a, int b)
+    {
+        if (a != b)
+        {
+            int temp = tet[a];
+            tet[a] = tet[b];
+            tet[b] = temp; 
+
+        }
+    }
+
+    
+
+    static void qsort(double[] t, int a, int b)
+    {
+        if (a >= b) return;
+
+        int res = partition(t, a, b);                      
+
+        qsort(t, a, res-1);
+        qsort(t, res+1, b);
+    }
+
+
+    static int partition(double[] array, int start, int end)
+    {
+        int res = start;
+
+        for (int i = start; i <= end; i++)
+        {
+            if (array[i] <= array[end])
+            {
+                double temp = array[res];
+                array[res] = array[i];
+                array[i] = temp;
+                res++;
+            }
+        }
+
+        return res-1;
+    }
+
+    static void quickSort()
+    {
+
+    }
+
+
+static int BinarySearch(double[] t, double x, int a, int b)
+{
+if (a >= b) return -1;
+
+int mid = a + ((b - a) / 2);
+
+if (t[mid] == x) return mid;
+
+if (t[mid] < x)
+    return BinarySearch(t, x, mid + 1, b);
+else
+    return BinarySearch(t, x, a, mid - 1);
+}
+
+
+static void Main(string[] args)
+{
+    string fileName = "dataFile.txt";
+
+    string line = File.ReadAllText(fileName);
+
+    Console.WriteLine("Это данные из файла dataFile.txt \n");
+
+    Console.WriteLine(line);
+
+    Console.WriteLine();
+
+    List<double> list = line
+                            .Split(new[] { " ", "\n" }, StringSplitOptions
+                            .RemoveEmptyEntries).Select(double.Parse)
+                            .ToList();
+
+    Console.WriteLine("Это список значений double из списка list:\n");
+
+    foreach (double d in list)
+        Console.Write(d + " ");
+
+    Console.WriteLine();
+
+    Console.WriteLine("\n\nСоздадим бинарное дерево класса TreeDoubleType\n");
+
+    Console.WriteLine("Заполним дерево элементами списка list.");
+
+    TreeDoubleType tree = new TreeDoubleType();
+
+    foreach (double d in list)
+        tree.AddElement(d);
+
+    double min = tree.GetMinElement();
+    double sum = tree.GetSum();
+
+    Console.WriteLine("\nМинимальный элемент дерева: {0:F}", min);
+    Console.WriteLine("\nСумма элементов дерева: {0:F}\n", sum);
+
+    double findElement = 7;
+    bool elem = tree.SearchElement(findElement);
+
+    Console.WriteLine("\n\nИмеется ли элемент {0} в дереве: {1}", findElement, elem);
+
+    long countTree = tree.CountElements();
+
+    Console.WriteLine("\nКоличество узлов в дереве: {0}\n", countTree);
+
+    double[] dbList = new double[list.Count];
+
+    for (int i = 0; i < dbList.Length; i++)
+        dbList[i] = list[i];
+
+    Console.WriteLine("\nОтсортированные данные из файла dataFile.txt\n");
+
+    qsort(dbList, 0, dbList.Length - 1);
+    
+    foreach (double d in dbList)
+        Console.Write(d + " ");
+
+    int num = BinarySearch(dbList, findElement, 0, dbList.Length);
+
+    Console.WriteLine("\n\nИндекс элемента {0} в массиве dbList: {1}", findElement, num);
+
+    Console.ReadKey();
+    
+}
+}
+
+
+
+
+
+Добавил печать дерева:
+
+public void printTree()
+{
+    if (this != null)
+    {
+        Console.WriteLine("ROOT : {0}", this._root.Element);
+        printTreeNode(_root);
+    }
+}
+
+public static void printTreeNode(Node<double> currentNode)
+{
+    if (currentNode.Left != null)
+    {
+        Console.WriteLine("     LEFT   for  {1}:  {0}", currentNode.Left.Element, currentNode.Element);
+    }
+
+    if (currentNode.Right != null)
+    {
+        Console.WriteLine("     RIGHT  for  {1}:  {0}", currentNode.Right.Element, currentNode.Element);
+    }
+
+    if (currentNode.Left != null) printTreeNode(currentNode.Left);
+    if (currentNode.Right != null) printTreeNode(currentNode.Right);
+
+}
+
+
+
+tree.printTree();
+
+
+Это данные из файла dataFile.txt
+
+13,5 7 6 4 3,3 8,6 -5,1 -1,2 7 9 11,12 25,5 17,1 18,4 12,2
+
+Это список значений double из списка list:
+
+13,5 7 6 4 3,3 8,6 -5,1 -1,2 7 9 11,12 25,5 17,1 18,4 12,2
+
+
+Создадим бинарное дерево класса TreeDoubleType
+
+Заполним дерево элементами списка list.
+
+Минимальный элемент дерева: -5,10
+
+Сумма элементов дерева: 136,42
+
+13,5
+
+Имеется ли элемент 7 в дереве: True
+
+Количество узлов в дереве: 15
+
+
+Отсортированные данные из файла dataFile.txt
+
+-5,1 -1,2 3,3 4 6 7 7 8,6 9 11,12 12,2 13,5 17,1 18,4 25,5
+
+Индекс элемента 7 в массиве dbList: 5
+
+ROOT : 13,5
+     LEFT   for  13,5:  7
+     RIGHT  for  13,5:  25,5
+     LEFT   for  7:  6
+     RIGHT  for  7:  8,6
+     LEFT   for  6:  4
+     RIGHT  for  6:  7
+     LEFT   for  4:  3,3
+     LEFT   for  3,3:  -5,1
+     RIGHT  for  -5,1:  -1,2
+     RIGHT  for  8,6:  9
+     RIGHT  for  9:  11,12
+     RIGHT  for  11,12:  12,2
+     LEFT   for  25,5:  17,1
+     RIGHT  for  17,1:  18,4
+
+
+
+
+
+
+Быстрая сортировка на PHP, хорошее описание
+
+/*
+* Функция, непосредственно производящая сортировку.
+* Так как массив передается по ссылке, ничего не возвращает.
+*/
+
+function custom_sort(&$array, $left, $right) {
+
+  //Создаем копии пришедших переменных, с которыми будем манипулировать в дальнейшем.
+  $l = $left;
+  $r = $right;
+  
+  //Вычисляем 'центр', на который будем опираться. Берем значение ~центральной ячейки массива.
+  $center = $array[(int)($left + $right) / 2];
+  
+  //Цикл, начинающий саму сортировку
+  do {
+  
+    //Ищем значения больше 'центра'
+    while ($array[$r] > $center) { 
+      $r--;
+    }
+    
+    //Ищем значения меньше 'центра'
+    while ($array[$l] < $center) { 
+      $l++;
+    }
+  
+    //После прохода циклов проверяем счетчики циклов
+    if ($l <= $r) {
+    
+      //И если условие true, то меняем ячейки друг с другом.
+       if ($array[$l] > $array[$r])   list($array[$r], $array[$l]) = array($array[$l], $array[$r]);
+      
+      //И переводим счетчики на следующий элементы
+      $l++;
+      $r--;
+    }
+  
+  //Повторяем цикл, если true
+  } while ($l <= $r);
+  
+  if ($r > $left) {
+    //Если условие true, совершаем рекурсию
+    //Передаем массив, исходное начало и текущий конец
+    custom_sort($array, $left, $r); 
+  }
+  
+  if ($l < $right) {
+    //Если условие true, совершаем рекурсию
+    //Передаем массив, текущие начало и конец
+    custom_sort($array, $l, $right);
+  }
+
+//Сортировка завершена
+
+}
+
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TreeBinary
+{
+class Node<T> where T : IComparable
+{
+public Node<T> Left { get; set; }
+public Node<T> Right { get; set; }
+public T Element { get; set; }
+
+public Node(T element)
+{
+    Element = element;
+}
+}
+
+class Tree<T> where T : IComparable
+{
+protected Node<T> _root;
+
+public void AddElement(T newElement)
+{
+    if (_root == null)
+    {
+        _root = new Node<T>(newElement);
+    }
+    else 
+        AddElementRecursion(_root, newElement);
+}
+
+private static void AddElementRecursion(Node<T> currentNode, T newElement)
+{
+    if (currentNode.Element.CompareTo(newElement) < 0)
+    {
+        if (currentNode.Right == null)
+            currentNode.Right = new Node<T>(newElement);
+        else
+            AddElementRecursion(currentNode.Right, newElement);
+    }
+    else
+    {
+        if (currentNode.Left == null)
+            currentNode.Left = new Node<T>(newElement);
+        else
+            AddElementRecursion(currentNode.Left, newElement);
+    }
+}
+
+public T GetMinElement()
+{
+    return GetMinElementRecursion(_root);
+}
+
+public static T GetMinElementRecursion(Node<T> currentNode)
+{
+    if (currentNode.Left == null)
+        return currentNode.Element;
+    else
+        return GetMinElementRecursion(currentNode.Left);
+}
+
+}
+
+class TreeDoubleType : Tree<double>
+{
+public double GetSum()
+{
+    double sum = 0;
+    GetSumRecursion(_root, ref sum);
+    return sum;
+}
+
+private static void GetSumRecursion(Node<double> currentNode, ref double sum)
+{
+    sum += currentNode.Element;
+
+    if (currentNode.Left != null)
+        GetSumRecursion(currentNode.Left, ref sum);
+
+    if (currentNode.Right != null)
+        GetSumRecursion(currentNode.Right, ref sum);
+}
+
+//public new double GetMinElement()
+//{
+//    return GetMinElementRecursion(_root);
+//}
+
+//public static new double GetMinElementRecursion(Node<double> currentNode)
+//{
+//    if (currentNode.Left == null)
+//        return currentNode.Element;
+//    else
+//        return GetMinElementRecursion(currentNode.Left);
+//}
+
+public bool SearchElement(double value)
+{
+    if (_root.Element == value)
+        return true;
+    if (_root.Element < value)
+    {
+        Console.Write(_root.Element + " ");
+        return SearchElementRecursion(_root.Right, value);
+    }
+    else
+    {
+        Console.Write(_root.Element + " ");
+        return SearchElementRecursion(_root.Left, value);
+    }
+}
+
+public static bool SearchElementRecursion(Node<double> currentNode, double value)
+{
+    if (currentNode == null) return false;
+
+    if (currentNode.Element == value)
+        return true;
+    if (currentNode.Element < value)
+    {
+        Console.Write(currentNode.Element + " ");
+        return SearchElementRecursion(currentNode.Right, value);
+    }
+    else
+    {
+        Console.Write(currentNode.Element + " ");
+        return SearchElementRecursion(currentNode.Left, value);
+    }
+}
+
+public long CountElements()
+{
+    return CountElementsRes(_root); 
+}
+
+private long CountElementsRes(Node<double> currentNode)
+{
+    long count = 1;
+
+    if (currentNode.Right != null)
+    {
+        count += CountElementsRes(currentNode.Right);
+    }
+    if (currentNode.Left != null)
+    {
+        count += CountElementsRes(currentNode.Left);                
+    }
+    return count;
+}
+
+public void printTree()
+{
+    if (this != null)
+    {
+        Console.WriteLine("ROOT : {0}", this._root.Element);
+        printTreeNode(_root);
+    }
+}
+
+public static void printTreeNode(Node<double> currentNode)
+{
+    if (currentNode.Left != null)
+    {
+        Console.WriteLine("     LEFT   for  {1}:  {0}", currentNode.Left.Element, currentNode.Element);
+    }
+
+    if (currentNode.Right != null)
+    {
+        Console.WriteLine("     RIGHT  for  {1}:  {0}", currentNode.Right.Element, currentNode.Element);
+    }
+
+    if (currentNode.Left != null) printTreeNode(currentNode.Left);
+    if (currentNode.Right != null) printTreeNode(currentNode.Right);
+
+}
+
+}
+
+class Program
+{
+static void SortedList(int[] tab)
+{
+    bool swapped;
+
+    do
+    {
+        swapped = false;
+                        
+        for (int i = 1; i < tab.Length; i++)
+        {
+            if (tab[i-1].CompareTo(tab[i]) > 0)
+            {
+                Swap(tab, i-1, i);
+                swapped = true;
+            }
+        }
+
+    } while (swapped != false);
+
+}
+
+static void Swap(int[] tet, int a, int b)
+{
+    if (a != b)
+    {
+        int temp = tet[a];
+        tet[a] = tet[b];
+        tet[b] = temp; 
+
+    }
+}
+
+
+
+static void qsort(double[] t, int a, int b)
+{
+    if (a >= b) return;
+
+    int res = partition(t, a, b);                      
+
+    qsort(t, a, res-1);
+    qsort(t, res+1, b);
+}
+
+
+static int partition(double[] array, int start, int end)
+{
+    int res = start;
+
+    for (int i = start; i <= end; i++)
+    {
+        if (array[i] <= array[end])
+        {
+            double temp = array[res];
+            array[res] = array[i];
+            array[i] = temp;
+            res++;
+        }
+    }
+
+    return res-1;
+}
+
+static void quickSort()
+{
+
+}
+
+
+static int BinarySearch(double[] t, double x, int a, int b)
+{
+    if (a >= b) return -1;
+
+    int mid = a + ((b - a) / 2);
+
+    if (t[mid] == x) return mid;
+
+    if (t[mid] < x)
+        return BinarySearch(t, x, mid + 1, b);
+    else
+        return BinarySearch(t, x, a, mid - 1);
+}
+
+
+static void Main(string[] args)
+{
+    string fileName = "dataFile.txt";
+
+    string line = File.ReadAllText(fileName);
+
+    Console.WriteLine("Это данные из файла dataFile.txt \n");
+
+    Console.WriteLine(line);
+
+    Console.WriteLine();
+
+    List<double> list = line.Split(new[] { " ", "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(double.Parse).ToList();
+
+    Console.WriteLine("Это список значений double из списка list:\n");
+
+    foreach (double d in list)
+        Console.Write(d + " ");
+
+    Console.WriteLine();
+
+    Console.WriteLine("\n\nСоздадим бинарное дерево класса TreeDoubleType\n");
+
+    Console.WriteLine("Заполним дерево элементами списка list.");
+
+    TreeDoubleType tree = new TreeDoubleType();
+
+    foreach (double d in list)
+        tree.AddElement(d);
+
+    double min = tree.GetMinElement();
+    double sum = tree.GetSum();
+
+    Console.WriteLine("\nМинимальный элемент дерева: {0:F}", min);
+    Console.WriteLine("\nСумма элементов дерева: {0:F}\n", sum);
+
+    double findElement = -5.1;
+
+    Console.WriteLine("\nПуть к элементу {0}\n", findElement);
+
+    bool elem = tree.SearchElement(findElement);
+
+    Console.WriteLine("\n\nИмеется ли элемент {0} в дереве: {1}", findElement, elem);
+
+    long countTree = tree.CountElements();
+
+    Console.WriteLine("\nКоличество узлов в дереве: {0}\n", countTree);
+
+    double[] dbList = new double[list.Count];
+
+    for (int i = 0; i < dbList.Length; i++)
+        dbList[i] = list[i];
+
+    Console.WriteLine("\nОтсортированные данные из файла dataFile.txt\n");
+
+    qsort(dbList, 0, dbList.Length - 1);
+    
+    foreach (double d in dbList)
+        Console.Write(d + " ");
+
+    int num = BinarySearch(dbList, findElement, 0, dbList.Length);
+
+    Console.WriteLine("\n\nИндекс элемента {0} в массиве dbList: {1}", findElement, num);
+
+    Console.WriteLine();
+
+    tree.printTree();
+
+    Console.ReadKey();
+    
+}
+}
+}
+
+
+
+Это данные из файла dataFile.txt
+
+13,5 7 6 4 3,3 8,6 -5,1 -1,2 7 9 11,12 25,5 17,1 18,4 12,2
+
+Это список значений double из списка list:
+
+13,5 7 6 4 3,3 8,6 -5,1 -1,2 7 9 11,12 25,5 17,1 18,4 12,2
+
+
+Создадим бинарное дерево класса TreeDoubleType
+
+Заполним дерево элементами списка list.
+
+Минимальный элемент дерева: -5,10
+
+Сумма элементов дерева: 136,42
+
+
+Путь к элементу -5,1
+
+13,5 7 6 4 3,3
+
+Имеется ли элемент -5,1 в дереве: True
+
+Количество узлов в дереве: 15
+
+
+Отсортированные данные из файла dataFile.txt
+
+-5,1 -1,2 3,3 4 6 7 7 8,6 9 11,12 12,2 13,5 17,1 18,4 25,5
+
+Индекс элемента -5,1 в массиве dbList: -1
+
+ROOT : 13,5
+     LEFT   for  13,5:  7
+     RIGHT  for  13,5:  25,5
+     LEFT   for  7:  6
+     RIGHT  for  7:  8,6
+     LEFT   for  6:  4
+     RIGHT  for  6:  7
+     LEFT   for  4:  3,3
+     RIGHT   for  4:  NULL
+     LEFT   for  3,3:  -5,1
+     RIGHT   for  3,3:  NULL
+     LEFT   for  -5,1:  NULL
+     RIGHT  for  -5,1:  -1,2
+     LEFT   for  -1,2:  NULL
+     RIGHT   for  -1,2:  NULL
+     LEFT   for  7:  NULL
+     RIGHT   for  7:  NULL
+     LEFT   for  8,6:  NULL
+     RIGHT  for  8,6:  9
+     LEFT   for  9:  NULL
+     RIGHT  for  9:  11,12
+     LEFT   for  11,12:  NULL
+     RIGHT  for  11,12:  12,2
+     LEFT   for  12,2:  NULL
+     RIGHT   for  12,2:  NULL
+     LEFT   for  25,5:  17,1
+     RIGHT   for  25,5:  NULL
+     LEFT   for  17,1:  NULL
+     RIGHT  for  17,1:  18,4
+     LEFT   for  18,4:  NULL
+     RIGHT   for  18,4:  NULL
